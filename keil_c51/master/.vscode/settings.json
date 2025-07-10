@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript",
+        "at89x52.h": "c",
+        "main_constant.h": "c",
+        "ucos.h": "c",
+        "function.h": "c"
+    },
+	"files.exclude": {
+		"**/keil_pr*":true,
+        "**/.git": true,
+		"**/README.md": true,
+        "**/.vscode": true,
+        "**/*.uvproj": true,
+        "**/*.SDF": true,
+        "**/*.DSN": true,
+        "**/*.bat": true,
+		"**/output": true,
+		"**/.gitignore": true
+    }
+}
