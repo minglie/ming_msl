@@ -1,7 +1,7 @@
 # ming_msl
 
 [Ming_MSL](https://github.com/minglie/ming_msl) 协议（Ming Serial Logic）是一种基于定极性脉宽编码（Fixed-Polarity Pulse Width Encoding, FP-PW）的单线、非归零（Non-Return-to-Zero）串行通信协议。
-该协议仅使用一根 SDA 线，采用位序决定极性，电平持续时间编码位值的机制，具有结构简单、实现容易、抗干扰强等优点，适用于低速、周期性、对时序要求不高的应用场景，并支持拓展为双向通信模式。
+该协议仅使用一根 SDA 线，采用位序决定极性，电平持续时间编码位值，具有结构简单、实现容易、抗干扰强等优点，适用于低速、周期性、对时序要求不高的应用场景，并支持拓展为双向通信模式。
 
 
 | 属性          | 内容说明                                                     |
