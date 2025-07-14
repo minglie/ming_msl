@@ -5,101 +5,101 @@
 
 #define MSL_DEBUG_ENABLE  1
 
-// Í¨ĞÅÄ£Ê½Ã¶¾Ù
+// é€šä¿¡æ¨¡å¼æšä¸¾
 typedef enum {
-    MSL_MODE_MASTER = 0,        // Ö÷»úÄ£Ê½
-    MSL_MODE_SLAVE,             // ´Ó»úÄ£Ê½
-    MSL_MODE_MASTER_ONLY_SEND,         // ½ö·¢ËÍÄ£Ê½
-    MSL_MODE_SLAVE_ONLY_RECEIVE       // ½ö½ÓÊÕÄ£Ê½
+    MSL_MODE_MASTER = 0,        // ä¸»æœºæ¨¡å¼
+    MSL_MODE_SLAVE,             // ä»æœºæ¨¡å¼
+    MSL_MODE_MASTER_ONLY_SEND,         // ä»…å‘é€æ¨¡å¼
+    MSL_MODE_SLAVE_ONLY_RECEIVE       // ä»…æ¥æ”¶æ¨¡å¼
 } MslMode_TypeDef;
 
-// Êı¾İ·½ÏòÃ¶¾Ù
+// æ•°æ®æ–¹å‘æšä¸¾
 typedef enum {
-    MSL_DIR_OUTPUT = 0,         // Êä³ö·½Ïò
-    MSL_DIR_INPUT              // ÊäÈë·½Ïò
+    MSL_DIR_OUTPUT = 0,         // è¾“å‡ºæ–¹å‘
+    MSL_DIR_INPUT              // è¾“å…¥æ–¹å‘
 } MSL_Direction_TypeDef;
 
 
-//Êı¾İ·½ÏòÃ¶¾Ù
+//æ•°æ®æ–¹å‘æšä¸¾
 typedef enum {
-    MSL_EVENT_SEND = 0,         // ·¢ËÍÍê³ÉÊÂ¼ş
-    MSL_EVENT_RECEIVE ,         // ½ÓÊÕÍê³ÉÊÂ¼ş
-    MSL_EVENT_ERROR             // ´íÎóÊÂ¼ş
+    MSL_EVENT_SEND = 0,         // å‘é€å®Œæˆäº‹ä»¶
+    MSL_EVENT_RECEIVE ,         // æ¥æ”¶å®Œæˆäº‹ä»¶
+    MSL_EVENT_ERROR             // é”™è¯¯äº‹ä»¶
 } MSL_Event_TypeDef;
 
 
 typedef int(MslPinRead)(uint8_t id);
 typedef void (MslPinWrite)(uint8_t id,uint8_t v);
 typedef void (MslPinDir)(uint8_t id,uint8_t v);
-//·¢³öÊÂ¼ş
+//å‘å‡ºäº‹ä»¶
 typedef void (MslOutEvent)(uint8_t id,MSL_Event_TypeDef eventType, uint32_t data);
 
 class MingMsl {
 private:
     uint8_t  m_id;
-    //mslµÄ4ÖÖ¹¤×÷Ä£Ê½,0:Ö÷»ú,1:´Ó»ú,2:µ¥ÏòÍâ·¢ 3:µ¥Ïò½ÓÊÕ
+    //mslçš„4ç§å·¥ä½œæ¨¡å¼,0:ä¸»æœº,1:ä»æœº,2:å•å‘å¤–å‘ 3:å•å‘æ¥æ”¶
     MslMode_TypeDef  m_mslMode;
-    //ÅäÖÃÍ¨ĞÅÓĞĞ§Î»Êı£¬Ö»ÄÜÈ¡2µ½32µÄÅ¼Êı
+    //é…ç½®é€šä¿¡æœ‰æ•ˆä½æ•°ï¼Œåªèƒ½å–2åˆ°32çš„å¶æ•°
     uint8_t  m_bitLength;
-    //×î´óÎ»µÄÊıÖµ
+    //æœ€å¤§ä½çš„æ•°å€¼
     uint32_t  m_maxBitValue;
     uint8_t m_rdy;
     uint8_t m_enable;
-    uint8_t m_delay;  //ÑÓÊ±¼ÆÊı
-    uint8_t m_state; //×´Ì¬»ú²½Öè
-    //µ±Ç°Î»
+    uint8_t m_delay;  //å»¶æ—¶è®¡æ•°
+    uint8_t m_state; //çŠ¶æ€æœºæ­¥éª¤
+    //å½“å‰ä½
     uint8_t m_datCur;
-    //×ÜÏß³ÖĞø¸ß¼ÆÊı
+    //æ€»çº¿æŒç»­é«˜è®¡æ•°
     uint8_t m_waitComHCount;
-    //×ÜÏß³ÖĞøµÍ¼ÆÊı
+    //æ€»çº¿æŒç»­ä½è®¡æ•°
     uint8_t m_waitComLCount;
-    //·¢ËÍ¼Ä´æÆ÷
+    //å‘é€å¯„å­˜å™¨
     uint32_t m_txData;
-    //·¢ËÍ¼Ä´æÆ÷Ôİ´æ
+    //å‘é€å¯„å­˜å™¨æš‚å­˜
     uint32_t m_txDataTemp;
-    //½ÓÊÕ¼Ä´æÆ÷
+    //æ¥æ”¶å¯„å­˜å™¨
     uint32_t m_rxData;
-    //½ÓÊÕ¼Ä´æÆ÷Ôİ´æ
+    //æ¥æ”¶å¯„å­˜å™¨æš‚å­˜
     uint32_t m_rxDataTemp;
-    //×ÜÏßµçÆ½³ÖĞøÊ±¼ä¼ÆÊı
+    //æ€»çº¿ç”µå¹³æŒç»­æ—¶é—´è®¡æ•°
     uint8_t m_levelCount;
-    //´Ó»ú²»»Ø¸´
+    //ä»æœºä¸å›å¤
     uint8_t  m_noBack;
-    //×ÜÏßµçÆ½¸ßµÍ×´Ì¬
+    //æ€»çº¿ç”µå¹³é«˜ä½çŠ¶æ€
     uint8_t  m_bitLevelS;
-    //Í¨Ñ¶´íÎó±êÖ¾
+    //é€šè®¯é”™è¯¯æ ‡å¿—
     uint8_t  m_comErr;
     uint8_t m_debugPinVal;
-    //ÑÓÊ±º¯Êı
+    //å»¶æ—¶å‡½æ•°
     void  MslDelay(uint8_t ticks);
-    //Ö÷»úÖÜÆÚº¯Êı
+    //ä¸»æœºå‘¨æœŸå‡½æ•°
     void  MasterOnTick();
-    //´Ó»úÖÜÆÚº¯Êı
+    //ä»æœºå‘¨æœŸå‡½æ•°
     void  SlaveOnTick();
 public:
-    //¶Á×ÜÏßº¯Êı
+    //è¯»æ€»çº¿å‡½æ•°
     static MslPinRead   *   readFun;
-    //Ğ´×ÜÏßº¯Êı
+    //å†™æ€»çº¿å‡½æ•°
     static MslPinWrite  *   writeFun;
-    //µ÷ÊÔÓÃ
+    //è°ƒè¯•ç”¨
     static MslPinWrite  *   writeDebugFun;
-    //ÉèÖÃ×ÜÏß·½Ïò
+    //è®¾ç½®æ€»çº¿æ–¹å‘
     static MslPinDir    *   dirFun;
-    //·¢³öÊÂ¼ş
+    //å‘å‡ºäº‹ä»¶
     static MslOutEvent  *   emitEvent;
-    //³õÊ¼»¯
+    //åˆå§‹åŒ–
     void     Init(uint8_t id,MslMode_TypeDef mslMode,uint8_t bitLength);
-    //Ê¹ÄÜ
+    //ä½¿èƒ½
     void     SetEnable(uint8_t enable);
-    //»ñÈ¡½ÓÊÕÊı¾İ
+    //è·å–æ¥æ”¶æ•°æ®
     uint32_t GetReceiveData();
-    //·¢ËÍÊı¾İ
+    //å‘é€æ•°æ®
     void     SendData(uint32_t sendData);
-    //»ñÈ¡×ÜÏß´íÎó±êÖ¾
+    //è·å–æ€»çº¿é”™è¯¯æ ‡å¿—
     uint8_t  GetComErr();
-    //Êı¾İ½»»»
+    //æ•°æ®äº¤æ¢
     bool  ExchangeData(uint32_t sendData,uint32_t * receiveData);
-    //Òª±£Ö¤Ö÷´Óµ÷ÓÃÖÜÆÚÒ»ÖÂ,½¨ÒéÓÃ1ms
+    //è¦ä¿è¯ä¸»ä»è°ƒç”¨å‘¨æœŸä¸€è‡´,å»ºè®®ç”¨1ms
     void   OnTick();
 };
 

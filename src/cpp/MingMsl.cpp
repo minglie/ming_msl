@@ -50,7 +50,7 @@ void MingMsl::MasterOnTick() {
     switch (m_state)
     {
         case 0: {
-            //³õÊ¼»¯·¢ËÍ
+            //åˆå§‹åŒ–å‘é€
             dirFun(m_id,MSL_DIR_OUTPUT);
             writeFun(m_id,0);
             m_txDataTemp = m_txData;
@@ -60,13 +60,13 @@ void MingMsl::MasterOnTick() {
             m_state = 1;
             break;
         }
-        case 1: {//À­¸ßÑÓÊ±5¸ötick×¼±¸·¢ËÍÊı¾İ
+        case 1: {//æ‹‰é«˜å»¶æ—¶5ä¸ªtickå‡†å¤‡å‘é€æ•°æ®
             dirFun(m_id,MSL_DIR_INPUT);
             MslDelay(5);
             m_state = 2;
             break;
         }
-        case 2: {//·¢ËÍµÚ Å¼ÊıÎ»(´Ó×óÊı)
+        case 2: {//å‘é€ç¬¬ å¶æ•°ä½(ä»å·¦æ•°)
             dirFun(m_id,MSL_DIR_OUTPUT);
             writeFun(m_id,0);
             if (m_txDataTemp & m_maxBitValue)
@@ -82,7 +82,7 @@ void MingMsl::MasterOnTick() {
             m_state = 3;
             break;
         }
-        case 3: {//·¢ËÍµÚ ÆæÊıÎ»(´Ó×óÊı)
+        case 3: {//å‘é€ç¬¬ å¥‡æ•°ä½(ä»å·¦æ•°)
             dirFun(m_id,MSL_DIR_INPUT);
             if (m_txDataTemp & m_maxBitValue)
             {
@@ -94,16 +94,16 @@ void MingMsl::MasterOnTick() {
             }
             m_txDataTemp <<= 1;
             m_datCur++;
-            if (m_datCur>m_bitLength + 1) //m_datCur==10, bit[0:9]·¢ËÍÍê
+            if (m_datCur>m_bitLength + 1) //m_datCur==10, bit[0:9]å‘é€å®Œ
             {
                 m_levelCount = 0;
                 m_datCur = 0;
                 if(emitEvent!= nullptr) {
                     emitEvent(m_id, MSL_EVENT_SEND, m_txData);
                 }
-                //½ö·¢ËÍÄ£Ê½Ôò²»½ÓÊÕ
+                //ä»…å‘é€æ¨¡å¼åˆ™ä¸æ¥æ”¶
                 if(m_mslMode==MSL_MODE_MASTER_ONLY_SEND){
-                    MslDelay(25); //×¼±¸ÏÂÒ»´ÎÍ¨ĞÅ
+                    MslDelay(25); //å‡†å¤‡ä¸‹ä¸€æ¬¡é€šä¿¡
                     m_state = 0;
                     break;
                 }
@@ -116,9 +116,9 @@ void MingMsl::MasterOnTick() {
             break;
         }
         case 4: { //////////////////////////////////////
-            //¿ªÊ¼½ÓÊÕ
+            //å¼€å§‹æ¥æ”¶
             dirFun(m_id,MSL_DIR_INPUT);
-            if (readFun(m_id))//µÈ´ı¶Ô·½·¢ËÍ,¶ÔÆë
+            if (readFun(m_id))//ç­‰å¾…å¯¹æ–¹å‘é€,å¯¹é½
             {
                 m_state = 4;
                 m_levelCount++; //
@@ -127,7 +127,7 @@ void MingMsl::MasterOnTick() {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
@@ -136,7 +136,7 @@ void MingMsl::MasterOnTick() {
                 m_rxDataTemp = 0;
                 m_datCur = 0;
                 m_state = 5;
-                m_levelCount = 1; //µ±Ç°·ÖÖ§Ò²Ëã²É¼¯Ò»´Î
+                m_levelCount = 1; //å½“å‰åˆ†æ”¯ä¹Ÿç®—é‡‡é›†ä¸€æ¬¡
                 #if CON_TIMR_TICK_DEBUG==1
                    writeDebugFun(m_id,m_debugPinVal=m_debugPinVal^1);
                 #endif
@@ -148,17 +148,17 @@ void MingMsl::MasterOnTick() {
             if (m_bitLevelS == readFun(m_id))
             {
                 m_levelCount++;
-                if (m_levelCount>20) //4msÒç³ö
+                if (m_levelCount>20) //4msæº¢å‡º
                 {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
             {
-                if (m_datCur>0) m_rxDataTemp <<= 1; //Èç¹ûÒÑ¾­ÊÕµ½Ò»Ğ©Êı¾İ£¬½«µÃµ½µÄÊı¾İÏò×óÒÆ¶¯
+                if (m_datCur>0) m_rxDataTemp <<= 1; //å¦‚æœå·²ç»æ”¶åˆ°ä¸€äº›æ•°æ®ï¼Œå°†å¾—åˆ°çš„æ•°æ®å‘å·¦ç§»åŠ¨
                 m_state = 6;
             }
             #if CON_TIMR_TICK_DEBUG==1
@@ -167,10 +167,10 @@ void MingMsl::MasterOnTick() {
             break;
         }
         case 6: { //////////////////////////////////////
-            if (m_levelCount >= 8) m_rxDataTemp++; //³¬¹ı7¸ötickÈÏÎªÊÇ1
+            if (m_levelCount >= 8) m_rxDataTemp++; //è¶…è¿‡7ä¸ªtickè®¤ä¸ºæ˜¯1
             m_bitLevelS ^= 1;
             m_datCur++;
-            if (m_datCur >= m_bitLength) //m_datCur==8ËµÃ÷[0:7]Êı¾İÒÑ¾­½ÓÊÕÍê±Ï
+            if (m_datCur >= m_bitLength) //m_datCur==8è¯´æ˜[0:7]æ•°æ®å·²ç»æ¥æ”¶å®Œæ¯•
             {
                 m_levelCount = 0;
                 m_state = 7;
@@ -183,8 +183,8 @@ void MingMsl::MasterOnTick() {
             else
             {
                 m_levelCount = 0;
-                m_state = 5; //½ÓÊÕÏÂÒ»Î»Êı¾İ
-                //ÕâÀï¿É²É¼¯Ò»´Î
+                m_state = 5; //æ¥æ”¶ä¸‹ä¸€ä½æ•°æ®
+                //è¿™é‡Œå¯é‡‡é›†ä¸€æ¬¡
                 if (m_bitLevelS == readFun(m_id)){
                     m_levelCount=1;
                     #if CON_TIMR_TICK_DEBUG==1
@@ -196,7 +196,7 @@ void MingMsl::MasterOnTick() {
         }
         case 7: { //////////////////////////////////////
             dirFun(m_id,MSL_DIR_INPUT);
-            if (readFun(m_id) == 0) //µÈ´ıbit[8]
+            if (readFun(m_id) == 0) //ç­‰å¾…bit[8]
             {
                 m_levelCount++;
                 if (m_levelCount>20) //4ms
@@ -204,28 +204,28 @@ void MingMsl::MasterOnTick() {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
             {
                 dirFun(m_id,MSL_DIR_INPUT);
-                MslDelay(25); //×¼±¸ÏÂÒ»´ÎÍ¨ĞÅ
+                MslDelay(25); //å‡†å¤‡ä¸‹ä¸€æ¬¡é€šä¿¡
                 m_state = 0;
                 m_noBack = 0;
             }
             break;
         }
         case 255: { //////////////////////////////////////
-            //Òì³£·ÖÖ§
+            //å¼‚å¸¸åˆ†æ”¯
             dirFun(m_id,MSL_DIR_INPUT);
-            m_noBack = 1;//Ö÷°å²»»Ø¸´
+            m_noBack = 1;//ä¸»æ¿ä¸å›å¤
             if (readFun(m_id) == 1)
             {
                 m_waitComLCount = 0;
                 m_waitComHCount++;
                 m_state = 255;
-                if (m_waitComHCount>20) //³ÖĞø¸ß4ms,ÖØĞÂ·¢ËÍ
+                if (m_waitComHCount>20) //æŒç»­é«˜4ms,é‡æ–°å‘é€
                 {
 
                     m_state = 0;
@@ -233,12 +233,12 @@ void MingMsl::MasterOnTick() {
                 }
             }
             else
-            { //×ÜÏß±»À­µÍ
+            { //æ€»çº¿è¢«æ‹‰ä½
                 m_waitComHCount = 0;
                 m_waitComLCount++;
                 if (m_waitComLCount>80)//16ms
                 {
-                    m_comErr = 1; //×ÜÏß±»À­µÍ
+                    m_comErr = 1; //æ€»çº¿è¢«æ‹‰ä½
                     m_waitComLCount = 0;
                     if(emitEvent!= nullptr){
                         emitEvent(m_id, MSL_EVENT_ERROR, 0);
@@ -254,7 +254,7 @@ void MingMsl::SlaveOnTick() {
     switch (m_state)
     {
         case 0: {
-            ////³õÊ¼»¯·ÖÖ§
+            ////åˆå§‹åŒ–åˆ†æ”¯
             dirFun(m_id,MSL_DIR_INPUT);
             m_levelCount = 0;
             m_waitComLCount = 0;
@@ -263,17 +263,17 @@ void MingMsl::SlaveOnTick() {
             m_state = 1;
             break;
         }
-        case 1: { //µÈ´ıÆğÊ¼Î»
+        case 1: { //ç­‰å¾…èµ·å§‹ä½
             dirFun(m_id,MSL_DIR_INPUT);
             if (readFun(m_id))
             {
                 m_state = 1;
                 m_waitComHCount++;
-                if (m_waitComHCount>100)//³ÖĞøÀ­¸ß100¸ötick
+                if (m_waitComHCount>100)//æŒç»­æ‹‰é«˜100ä¸ªtick
                 {
-                    m_state = 0; //ÖØĞÂ¿ªÊ¼½ÓÊÕ
+                    m_state = 0; //é‡æ–°å¼€å§‹æ¥æ”¶
                 }
-                if (m_waitComLCount >= 2)//¼ì²âµ½´óÓÚ2¸ötickÒÔÉÏµÍµçÆ½
+                if (m_waitComLCount >= 2)//æ£€æµ‹åˆ°å¤§äº2ä¸ªtickä»¥ä¸Šä½ç”µå¹³
                 {
                     m_levelCount = 0;
                     m_state = 2;
@@ -286,9 +286,9 @@ void MingMsl::SlaveOnTick() {
             }
             break;
         }
-        case 2: {//¿ªÊ¼½ÓÊÕ
+        case 2: {//å¼€å§‹æ¥æ”¶
             dirFun(m_id,MSL_DIR_INPUT);
-            if (readFun(m_id))//µÈ´ı¶Ô·½·¢ËÍ,¶ÔÆë
+            if (readFun(m_id))//ç­‰å¾…å¯¹æ–¹å‘é€,å¯¹é½
             {
                 m_state = 2;
                 m_levelCount++; //
@@ -298,7 +298,7 @@ void MingMsl::SlaveOnTick() {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
@@ -307,7 +307,7 @@ void MingMsl::SlaveOnTick() {
                 m_rxDataTemp = 0;
                 m_datCur = 0;
                 m_state = 3;
-                m_levelCount = 1; //µ±Ç°·ÖÖ§Ò²Ëã²É¼¯Ò»´Î
+                m_levelCount = 1; //å½“å‰åˆ†æ”¯ä¹Ÿç®—é‡‡é›†ä¸€æ¬¡
                 #if CON_TIMR_TICK_DEBUG==1
                     writeDebugFun(m_id,m_debugPinVal=m_debugPinVal^1);
                 #endif
@@ -319,17 +319,17 @@ void MingMsl::SlaveOnTick() {
             if (m_bitLevelS == readFun(m_id))
             {
                 m_levelCount++;
-                if (m_levelCount>20) //4msÒç³ö
+                if (m_levelCount>20) //4msæº¢å‡º
                 {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
-            { //m_datCur>0 ,ËµÃ÷ÒÑ¾­µÃµ½ÖÁÉÙ1bitÊı¾İ
-                if (m_datCur>0) m_rxDataTemp <<= 1; //½«µÃµ½µÄÊı¾İÏò×óÒÆ¶¯
+            { //m_datCur>0 ,è¯´æ˜å·²ç»å¾—åˆ°è‡³å°‘1bitæ•°æ®
+                if (m_datCur>0) m_rxDataTemp <<= 1; //å°†å¾—åˆ°çš„æ•°æ®å‘å·¦ç§»åŠ¨
                 m_state = 4;
             }
             #if CON_TIMR_TICK_DEBUG==1
@@ -338,10 +338,10 @@ void MingMsl::SlaveOnTick() {
             break;
         }
         case 4: {
-            if (m_levelCount >= 8) m_rxDataTemp++; //³¬¹ı8¸ötickÈÏÎªÊÇ1
+            if (m_levelCount >= 8) m_rxDataTemp++; //è¶…è¿‡8ä¸ªtickè®¤ä¸ºæ˜¯1
             m_bitLevelS ^= 1;
             m_datCur++;
-            if (m_datCur >= m_bitLength) //Êı¾İÒÑ¾­½ÓÊÕÍê±Ï
+            if (m_datCur >= m_bitLength) //æ•°æ®å·²ç»æ¥æ”¶å®Œæ¯•
             {
                 m_levelCount = 0;
                 m_state = 5;
@@ -353,8 +353,8 @@ void MingMsl::SlaveOnTick() {
             else
             {
                 m_levelCount = 0;
-                m_state = 3; //½ÓÊÕÏÂÒ»Î»Êı¾İ
-                //ÕâÀï¿É²É¼¯Ò»´Î
+                m_state = 3; //æ¥æ”¶ä¸‹ä¸€ä½æ•°æ®
+                //è¿™é‡Œå¯é‡‡é›†ä¸€æ¬¡
                 if (m_bitLevelS == readFun(m_id)){
                     m_levelCount=1;
                     #if CON_TIMR_TICK_DEBUG==1
@@ -366,7 +366,7 @@ void MingMsl::SlaveOnTick() {
         }
         case 5: {
             dirFun(m_id,MSL_DIR_INPUT);
-            if (readFun(m_id) == 0) //µÈ´ıbit[8]
+            if (readFun(m_id) == 0) //ç­‰å¾…bit[8]
             {
                 m_levelCount++;
                 if (m_levelCount>20) //4ms
@@ -374,18 +374,18 @@ void MingMsl::SlaveOnTick() {
                     m_levelCount = 0;
                     m_waitComHCount = 0;
                     m_waitComLCount = 0;
-                    m_state = 255; //Òç³ö,Ìøµ½Òì³£·ÖÖ§
+                    m_state = 255; //æº¢å‡º,è·³åˆ°å¼‚å¸¸åˆ†æ”¯
                 }
             }
             else
             {
-                //½ö½ÓÊÕÄ£Ê½Ôò²»·¢ËÍ,×¼±¸ÏÂ´Î½ÓÊÕ
+                //ä»…æ¥æ”¶æ¨¡å¼åˆ™ä¸å‘é€,å‡†å¤‡ä¸‹æ¬¡æ¥æ”¶
                 if(m_mslMode==MSL_MODE_SLAVE_ONLY_RECEIVE){
                     m_state = 0;
                     break;
                 }
-                MslDelay(10); //ÑÓÊ±2ms£¬×¼±¸·¢ËÍ
-                //³õÊ¼»¯·¢ËÍ
+                MslDelay(10); //å»¶æ—¶2msï¼Œå‡†å¤‡å‘é€
+                //åˆå§‹åŒ–å‘é€
                 m_txDataTemp = m_txData;
                 m_datCur = 0;
                 m_state = 6;
@@ -393,7 +393,7 @@ void MingMsl::SlaveOnTick() {
             break;
         }
 
-        case 6: {//·¢ËÍµÚÅ¼ÊıÎ»(´Ó×óÊı)
+        case 6: {//å‘é€ç¬¬å¶æ•°ä½(ä»å·¦æ•°)
             dirFun(m_id,MSL_DIR_OUTPUT);
             writeFun(m_id,0);
             if (m_txDataTemp & m_maxBitValue)
@@ -409,7 +409,7 @@ void MingMsl::SlaveOnTick() {
             m_state = 7;
             break;
         }
-        case 7: {//·¢ËÍµÚÆæÊıÎ»(´Ó×óÊı)
+        case 7: {//å‘é€ç¬¬å¥‡æ•°ä½(ä»å·¦æ•°)
             dirFun(m_id,MSL_DIR_INPUT);
             if (m_txDataTemp & m_maxBitValue)
             {
@@ -421,12 +421,12 @@ void MingMsl::SlaveOnTick() {
             }
             m_txDataTemp <<= 1;
             m_datCur++;
-            if (m_datCur>m_bitLength + 1) //m_datCur==10, bit[0:9]·¢ËÍÍê
+            if (m_datCur>m_bitLength + 1) //m_datCur==10, bit[0:9]å‘é€å®Œ
             {
                 m_levelCount = 0;
                 m_datCur = 0;
                 dirFun(m_id,MSL_DIR_INPUT);
-                MslDelay(5);//ÑÓÊ±1ms£¬×¼±¸ÏÂÒ»´Î½ÓÊÕ
+                MslDelay(5);//å»¶æ—¶1msï¼Œå‡†å¤‡ä¸‹ä¸€æ¬¡æ¥æ”¶
                 if(emitEvent!= nullptr){
                     emitEvent(m_id, MSL_EVENT_SEND, m_txData);
                 }
@@ -439,7 +439,7 @@ void MingMsl::SlaveOnTick() {
             break;
 
         }
-        case 255: { //Òì³£·ÖÖ§
+        case 255: { //å¼‚å¸¸åˆ†æ”¯
             dirFun(m_id,MSL_DIR_INPUT);
             m_rxData = 0;
             if (readFun(m_id))
@@ -447,7 +447,7 @@ void MingMsl::SlaveOnTick() {
                 m_waitComLCount = 0;
                 m_waitComHCount++;
                 m_state = 255;
-                if (m_waitComHCount>20) //³ÖĞø¸ß,ÖØĞÂ½ÓÊÕ
+                if (m_waitComHCount>20) //æŒç»­é«˜,é‡æ–°æ¥æ”¶
                 {
                     m_state = 0;
                     m_waitComHCount = 0;
@@ -459,7 +459,7 @@ void MingMsl::SlaveOnTick() {
                 m_waitComLCount++;
                 if (m_waitComLCount>80)//16ms
                 {
-                    m_comErr = 1; //×ÜÏß±»À­µÍ
+                    m_comErr = 1; //æ€»çº¿è¢«æ‹‰ä½
                     m_waitComLCount = 0;
                 }
             }
