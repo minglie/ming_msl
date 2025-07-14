@@ -1,6 +1,6 @@
 # ming_msl
 
-Ming_MSL 协议（Ming Serial Logic）是一种基于 NRZ-T 编码（Non-Return-to-Zero Time encoding） 的单线、低速、周期性、可拓展为双向通信的串行通信协议。
+[Ming_MSL](https://github.com/minglie/ming_msl) 协议（Ming Serial Logic）是一种基于 NRZ-T 编码（Non-Return-to-Zero Time encoding） 的单线、低速、周期性、可拓展为双向通信的串行通信协议。
 该协议特别适用于数据变化缓慢、对时序依赖要求不高的场景，具备电路简洁、易于实现、抗干扰能力强等优势。
 
 
