@@ -1,13 +1,13 @@
 # ming_msl
 
-[Ming_MSL](https://github.com/minglie/ming_msl) 协议（Ming Serial Logic）是一种基于 NRZ-T 编码（Non-Return-to-Zero Time encoding） 的单线、低速、周期性、可拓展为双向通信的串行通信协议。
-该协议特别适用于数据变化缓慢、对时序依赖要求不高的场景，具备电路简洁、易于实现、抗干扰能力强等优势。
+[Ming_MSL](https://github.com/minglie/ming_msl) 协议（Ming Serial Logic）是一种基于定极性脉宽编码（Fixed-Polarity Pulse Width Encoding, FP-PW）的单线、非归零（Non-Return-to-Zero）串行通信协议。
+该协议仅使用一根 SDA 线，采用位序决定极性，电平持续时间编码位值的机制，具有结构简单、实现容易、抗干扰强等优点，适用于低速、周期性、对时序要求不高的应用场景，并支持拓展为双向通信模式。
 
 
 | 属性          | 内容说明                                                     |
 | ----------- | -------------------------------------------------------- |
 | **协议类型**    | 单线异步串行通信协议，仅使用 1 根 SDA 信号线                               |
-| **编码方式**    | **NRZ-T**（Non-Return-to-Zero with Time Encoding）         |
+| **编码方式**    | 固定极性 + Tick 脉宽编码（5tick = 0，10tick = 1       |
 | **极性策略**    | 每个 bit 的 SDA 电平极性由其位序（奇偶性）决定：<br>奇数位为低，偶数位为高             |
 | **位值判断**    | 通过电平保持时长编码 bit 值：`5 tick` 表示 `0`，`10 tick` 表示 `1`,允许±2tick宽容误差     |
 | **帧结构**      | `起始位`（低5+高5） → `数据位 × N` → `停止位`（低5+高5） → `帧间隔`（≥25 tick） |
