@@ -95,7 +95,7 @@ ming_msl
 
  Verilog 主  [msl_master_sender.v](src/verilog/msl_master_sender.v)
 
- Verilog 从  [msl_master_sender.v](src/verilog/msl_slave_receiver.v)
+ Verilog 从  [msl_master_receiver.v](src/verilog/msl_slave_receiver.v)
 
 # 通讯距离
 > ming_msl 默认tick取1ms,主要是为了好算和够用。
