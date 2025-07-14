@@ -6,6 +6,8 @@ ming_msl 是周期,低速,双向,软件型的通信
 
 - clion_esp32_wokwi 是c++重写的
 
+- fpga 是verilog  ming_msl主机和从机的实现
+
 # 移植
 实现如下3个函数
 ``` c++
@@ -47,3 +49,4 @@ typedef enum {
 ![images/](img/2.jpg)
 ![images/](img/3.jpg)
 ![images/](img/4.png)
+![images/](img/5.png)
