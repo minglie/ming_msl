@@ -19,6 +19,8 @@ Ming_MSL 协议（Ming Serial Logic）是一种基于 NRZ-T 编码（Non-Return-
 | **抗干扰性**    | 接收方7~10tick都认定为1, 因此时序宽松、结构稳健、硬件实现简单                      |
 
 
+# wokwi 在线演示
+https://wokwi.com/projects/436060085417312257
 
 # 移植
 为实现跨平台兼容，Ming_MSL 提供 4 个底层函数指针接口。  
