@@ -62,6 +62,8 @@ typedef enum {
 
 
 # 目录结构
+
+
 ```markdown
 ming_msl
 │  README.md
@@ -81,6 +83,14 @@ ming_msl
 │  ├─keil_c51
 │  └─proteus
 ```
+
+
+本项目已实现：
+ C++ 主从 [MingMsl.h](src/cpp/MingMsl.h)
+ Verilog 主  [msl_master_sender.v](src/verilog/msl_master_sender.v)
+ Verilog 从  [msl_master_sender.v](src/verilog/msl_slave_receiver.v)
+
+
 
 
 # 时序图
