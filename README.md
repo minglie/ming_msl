@@ -20,7 +20,7 @@
 
 
 # wokwi 在线演示
-https://wokwi.com/projects/436060085417312257
+[wokwi演示](https://wokwi.com/projects/436060085417312257)
 
 # 移植
 为实现跨平台兼容，Ming_MSL 提供 4 个底层函数指针接口。  
