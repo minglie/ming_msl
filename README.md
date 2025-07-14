@@ -3,11 +3,6 @@
 Ming_MSL 协议（Ming Serial Logic）是一种基于 NRZ-T 编码（Non-Return-to-Zero Time encoding） 的单线、低速、周期型、可扩展双向的串行通信协议。
 它特别适合用于数据变化缓慢、对时序要求不高的场景，通信电路简洁、易于实现，且具备良好的抗干扰能力。
 
-- keil_c51 是c51版本的
-
-- clion_esp32_wokwi 是c++重写的
-
-- fpga 用verilog对ming_msl 协议主机和从机的实现
 
 | 项目          | 内容说明                                                     |
 | ----------- | -------------------------------------------------------- |
@@ -60,6 +55,29 @@ typedef enum {
 ``` markdown
  2到32之间的偶数
 ```
+
+# 目录结构
+ming_msl
+│  README.md
+│─src
+│    ├─cpp
+│    │      MingMsl.cpp
+│    │      MingMsl.h
+│    │
+│    └─verilog
+│            msl_master_sender.v
+│            msl_slave_receiver.v
+│            tb.v
+│
+├─examples
+│  ├─clion_esp32_wokwi
+│  ├─fpga_sim
+│  ├─keil_c51
+│  └─proteus
+
+
+
+
 
 # 时序图
 ![images/](img/1.jpg)
