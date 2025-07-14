@@ -107,25 +107,26 @@ timeline
     title Ming_MSL 单帧传输时序图（8bit 数据，含起始/停止/间隔）
 
     section 起始位
-    低电平 5 tick: 0
-    高电平 5 tick: 5
+    低电平（5 tick）: 0
+    高电平（5 tick）: 5
 
-    section 数据位（例如发送 0b10100110）
-    bit7 = 0，低10tick（奇位）: 10
-    bit6 = 1，高5tick（偶位）: 20
-    bit5 = 0，低10tick（奇位）: 30
-    bit4 = 1，高5tick（偶位）: 40
-    bit3 = 0，低5tick（奇位）: 50
-    bit2 = 1，高10tick（偶位）: 60
-    bit1 = 0，低10tick（奇位）: 70
-    bit0 = 1，高5tick（偶位）: 80
+    section 数据位（发送 0b10100110，bit7→bit0）
+    bit7 = 1，低（10 tick）: 10
+    bit6 = 0，高（5 tick）: 20
+    bit5 = 1，低（10 tick）: 25
+    bit4 = 0，高（5 tick）: 35
+    bit3 = 0，低（5 tick）: 40
+    bit2 = 1，高（10 tick）: 45
+    bit1 = 1，低（10 tick）: 55
+    bit0 = 1，高（5 tick）: 65
 
     section 停止位
-    低电平 5 tick: 90
-    高电平 5 tick: 95
+    低电平（5 tick）: 70
+    高电平（5 tick）: 75
 
     section 帧间隔
-    空闲高电平 25 tick: 125
+    空闲高电平（25 tick）: 80
+
 ```
 
 ## 8bit位宽通讯波形
