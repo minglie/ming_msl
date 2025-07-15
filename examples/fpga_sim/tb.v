@@ -4,7 +4,7 @@ module tb;
 
     // 参数定义
     parameter P_DATA_WIDTH = 32;
-    parameter P_SYSTEM_CLK = 1000;
+    parameter P_CLK_FREQ = 1000;
     parameter CLK_PERIOD = 20;  // 50MHz
 
     // 时钟、复位
@@ -21,7 +21,7 @@ module tb;
 
     msl_master_sender #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
-        .P_SYSTEM_CLK(P_SYSTEM_CLK)
+        .P_CLK_FREQ(P_CLK_FREQ)
     ) sender_inst (
         .i_clk     (i_clk),
         .i_rst_n   (i_rst_n),
@@ -36,7 +36,7 @@ module tb;
 
     msl_slave_receiver #(
         .P_DATA_WIDTH(P_DATA_WIDTH),
-        .P_SYSTEM_CLK(P_SYSTEM_CLK)
+        .P_CLK_FREQ(P_CLK_FREQ)
     ) receiver_inst (
         .i_clk     (i_clk),
         .i_rst_n   (i_rst_n),
@@ -59,7 +59,7 @@ module tb;
         $display("[TB] Starting loopback test...");
         // 初始状态
         i_rst_n = 0;
-        i_data  = 8'h12345678; // 要发送的数据
+        i_data  = 32'h12345678; // 要发送的数据
          #5
          i_rst_n = 1;
         // 等待一次完整通信

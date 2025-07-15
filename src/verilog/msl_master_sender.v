@@ -1,9 +1,11 @@
-//circuit
 // msl_master_sender.v
-//| èµ·å§‹ä½ | æ•°æ®ä½ | ç»“æŸä½ | å¸§é—´éš”(P_GAP) | èµ·å§‹ä½ | æ•°æ®ä½ | ç»“æŸä½ | å¸§é—´éš”(P_GAP) |
+//| ÆğÊ¼Î» | Êı¾İÎ» | ½áÊøÎ» | Ö¡¼ä¸ô(S_GAP) | ÆğÊ¼Î» | Êı¾İÎ» | ½áÊøÎ» | Ö¡¼ä¸ô(S_GAP) |
+/// @brief MSL Master Sender
+/// @param P_DATA_WIDTH ·¢ËÍÎ»¿í
+/// @param P_CLK_FREQ Ê±ÖÓÆµÂÊ£¬µ¥Î» Hz
 module msl_master_sender #(
     parameter P_DATA_WIDTH = 8,
-    parameter P_SYSTEM_CLK = 50_000_000
+    parameter P_CLK_FREQ = 50_000_000
 ) (
     input  wire        i_clk,
     input  wire        i_rst_n,
@@ -12,87 +14,87 @@ module msl_master_sender #(
     output reg         o_msl_1ms
 );
 
-    //1msåˆ†é¢‘å™¨
-    localparam P_1MS_DIV = P_SYSTEM_CLK / 1000 - 1;
+    //1ms·ÖÆµÆ÷
+    localparam L_TICK_1MS = P_CLK_FREQ / 1000 - 1;
     reg [31:0] r_clk_1ms_cnt;
-    reg        r_1ms_tick;
-    // 1ms tickåˆ†é¢‘å™¨
+    reg        r_tick_1ms;
+    // 1ms tick·ÖÆµÆ÷
     always @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
             r_clk_1ms_cnt <= 0;
-            r_1ms_tick <= 0;
+            r_tick_1ms <= 0;
             o_msl_1ms<=0;
-        end else if (r_clk_1ms_cnt == P_1MS_DIV) begin
+        end else if (r_clk_1ms_cnt == L_TICK_1MS) begin
             r_clk_1ms_cnt <= 0;
-            r_1ms_tick <= 1;
+            r_tick_1ms <= 1;
             o_msl_1ms<=!o_msl_1ms;
         end else begin
             r_clk_1ms_cnt <= r_clk_1ms_cnt + 1;
-            r_1ms_tick <= 0;
+            r_tick_1ms <= 0;
         end
     end
 
-    //çŠ¶æ€é›†
-    localparam P_IDLE  = 3'd0;
-    localparam P_START = 3'd1;
-    localparam P_SEND  = 3'd2;
-    localparam P_STOP  = 3'd3;
-    localparam P_GAP   = 3'd4;
+    //×´Ì¬¼¯
+    localparam S_IDLE  = 3'd0;
+    localparam S_START = 3'd1;
+    localparam S_SEND  = 3'd2;
+    localparam S_STOP  = 3'd3;
+    localparam S_GAP   = 3'd4;
     reg [2:0] r_state, r_next_state;
     reg [7:0] r_cnt;
     reg [7:0] r_bit_cnt;
-    reg [P_DATA_WIDTH-1:0] r_rx_data_temp;
+    reg [P_DATA_WIDTH-1:0] r_tx_data_temp;
 
-    //è½¬ç§»é›†
+    //×ªÒÆ¼¯
     always @(*) begin
        r_next_state = r_state;
         case (r_state)
-            P_IDLE:  r_next_state = P_START;
-            P_START: if (r_cnt == 4'd9) r_next_state = P_SEND;
-            P_SEND:  if (r_bit_cnt == P_DATA_WIDTH) r_next_state = P_STOP;
-            P_STOP:  if (r_cnt == 4'd9) r_next_state = P_GAP;
-            P_GAP:   if (r_cnt == 5'd24) r_next_state = P_IDLE;
+            S_IDLE:  r_next_state = S_START;
+            S_START: if (r_cnt == 4'd9) r_next_state = S_SEND;
+            S_SEND:  if (r_bit_cnt == P_DATA_WIDTH) r_next_state = S_STOP;
+            S_STOP:  if (r_cnt == 4'd9) r_next_state = S_GAP;
+            S_GAP:   if (r_cnt == 5'd24) r_next_state = S_IDLE;
         endcase
     end
 
-    //åŠ¨ä½œé›†
+    //¶¯×÷¼¯
     always @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
-            r_state      <= P_IDLE;
+            r_state      <= S_IDLE;
             r_cnt  <= 0;
             r_bit_cnt    <= 0;
-            r_rx_data_temp <= 0;
+            r_tx_data_temp <= 0;
             o_msl_sda    <= 1'b1;
-        end else if(r_1ms_tick) begin
+        end else if(r_tick_1ms) begin
             r_state <= r_next_state;
             case (r_state)
-                P_IDLE: begin
+                S_IDLE: begin
                     o_msl_sda    <= 1'b1;
                     r_bit_cnt    <= 0;
-                    r_rx_data_temp <= i_data;
+                    r_tx_data_temp <= i_data;
                     r_cnt  <= 0;
                 end
-                P_START: begin
+                S_START: begin
                     o_msl_sda   <= (r_cnt < 5) ? 1'b0 : 1'b1;
                     if(r_cnt == 4'd9)  r_cnt <= 0;
                     else               r_cnt <= r_cnt + 1;
                 end
-                P_SEND: begin
-                    //å¶æ•°ä½æ˜¯ä½ç”µå¹³,å¥‡æ•°ä½æ˜¯é«˜ç”µå¹³
+                S_SEND: begin
+                    //Å¼ÊıÎ»ÊÇµÍµçÆ½,ÆæÊıÎ»ÊÇ¸ßµçÆ½
                     o_msl_sda   <= r_bit_cnt[0]==1;
-                    //0:å»¶æ—¶5ä¸ªtick 1:å»¶æ—¶10ä¸ªtick
-                    if (r_cnt == (r_rx_data_temp[P_DATA_WIDTH-1-r_bit_cnt]==0?4:9)) begin
+                    //0:ÑÓÊ±5¸ötick 1:ÑÓÊ±10¸ötick
+                    if (r_cnt == (r_tx_data_temp[P_DATA_WIDTH-1-r_bit_cnt]==0?4:9)) begin
                         r_cnt <= 0;
                         r_bit_cnt <= r_bit_cnt + 1;
                     end
                     else  r_cnt <= r_cnt + 1;
                 end
-                P_STOP: begin
+                S_STOP: begin
                     o_msl_sda   <= (r_cnt < 5) ? 1'b0 : 1'b1;
                     if(r_cnt == 4'd9)  r_cnt <= 0;
                     else               r_cnt <= r_cnt + 1;
                 end
-                P_GAP: begin
+                S_GAP: begin
                     o_msl_sda   <= 1'b1;
                     r_cnt <= r_cnt + 1;
                 end
